@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # Backend Services
+  ingestion:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    command: uvicorn services.ingestion.main:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://muleshield:muleshield@postgres:5432/muleshield
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET_KEY=muleshield-boi-cybershield-2026-secret-key
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  feature-store:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    command: uvicorn services.feature-store.main:app --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://muleshield:muleshield@postgres:5432/muleshield
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  model-serving:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    command: uvicorn services.model-serving.main:app --host 0.0.0.0 --port 8003
+    ports:
+      - "8003:8003"
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  decision-engine:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    command: uvicorn services.decision-engine.main:app --host 0.0.0.0 --port 8004
+    ports:
+      - "8004:8004"
+    restart: unless-stopped
+
+  case-management:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    command: uvicorn services.case-management.main:app --host 0.0.0.0 --port 8005
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://muleshield:muleshield@postgres:5432/muleshield
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  observability:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    command: uvicorn services.observability.main:app --host 0.0.0.0 --port 8006
+    ports:
+      - "8006:8006"
+    restart: unless-stopped
+
+  # Infrastructure
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=muleshield
+      - POSTGRES_PASSWORD=muleshield
+      - POSTGRES_DB=muleshield
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:

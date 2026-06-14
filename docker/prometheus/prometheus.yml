@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'ingestion'
+    static_configs:
+      - targets: ['ingestion:8001']
+    metrics_path: '/metrics'
+
+  - job_name: 'feature-store'
+    static_configs:
+      - targets: ['feature-store:8002']
+    metrics_path: '/metrics'
+
+  - job_name: 'model-serving'
+    static_configs:
+      - targets: ['model-serving:8003']
+    metrics_path: '/metrics'
+
+  - job_name: 'decision-engine'
+    static_configs:
+      - targets: ['decision-engine:8004']
+    metrics_path: '/metrics'
+
+  - job_name: 'case-management'
+    static_configs:
+      - targets: ['case-management:8005']
+    metrics_path: '/metrics'
+
+  - job_name: 'observability'
+    static_configs:
+      - targets: ['observability:8006']
+    metrics_path: '/metrics'
