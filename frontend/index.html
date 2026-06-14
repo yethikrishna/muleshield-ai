@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuleShield AI | BOI CyberShield 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --critical: #dc2626;
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --border-glass: rgba(148, 163, 184, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animated::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+            animation: bgPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(59, 130, 246, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Main Container */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-glass);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logo-section {
+            padding: 0 24px 32px;
+            border-bottom: 1px solid var(--border-glass);
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 8px 32px rgba(59, 130, 246, 0.5); }
+        }
+
+        .logo-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--primary);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 32px 40px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.6s ease-out backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .stat-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .stat-trend.up {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .stat-trend.down {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 24px;
+            animation: fadeInUp 0.6s ease-out 0.3s backwards;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-live {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-live::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Risk Distribution */
+        .risk-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .risk-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .risk-label {
+            width: 80px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .risk-bar-container {
+            flex: 1;
+            height: 8px;
+            background: rgba(148, 163, 184, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .risk-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .risk-bar.critical { background: linear-gradient(90deg, #dc2626, #ef4444); }
+        .risk-bar.high { background: linear-gradient(90deg, #f59e0b, #f97316); }
+        .risk-bar.medium { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .risk-bar.low { background: linear-gradient(90deg, #10b981, #34d399); }
+
+        .risk-count {
+            width: 40px;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Services Status */
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .service-item:hover {
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .service-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .service-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+
+        .service-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .service-status {
+            font-size: 12px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Architecture Diagram */
+        .architecture-section {
+            margin-top: 32px;
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .arch-node {
+            padding: 20px 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .arch-node:hover {
+            transform: scale(1.05);
+        }
+
+        .arch-node.ingestion { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; }
+        .arch-node.features { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; }
+        .arch-node.ml { background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.3); color: #a78bfa; }
+        .arch-node.decision { background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; }
+        .arch-node.cases { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; }
+        .arch-node.observability { background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.3); color: #22d3ee; }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .cards-grid { grid-template-columns: 1fr; }
+            .architecture-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .architecture-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animated">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 85%; animation-delay: 5s;"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <div class="logo">
+                    <div class="logo-icon">🛡️</div>
+                    <div class="logo-text">
+                        <h1>MuleShield AI</h1>
+                        <p>BOI CyberShield 2026</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">💼</span>
+                    Cases
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">💳</span>
+                    Transactions
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">🔔</span>
+                    Alerts
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">📈</span>
+                    Analytics
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">📋</span>
+                    Reports
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    Settings
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1 class="page-title">Fraud Detection Dashboard</h1>
+                <p class="page-subtitle">Real-time mule account detection powered by AI</p>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Transactions (24h)</div>
+                    <div class="stat-value" style="color: #60a5fa;">3,842</div>
+                    <div class="stat-trend up">↑ 12.5% vs yesterday</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Blocked (24h)</div>
+                    <div class="stat-value" style="color: #f87171;">12</div>
+                    <div class="stat-trend down">↓ 8.3% vs yesterday</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Open Cases</div>
+                    <div class="stat-value" style="color: #fbbf24;">47</div>
+                    <div class="stat-trend up">8 resolved today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Latency</div>
+                    <div class="stat-value" style="color: #34d399;">42ms</div>
+                    <div class="stat-trend up">Target: <100ms</div>
+                </div>
+            </div>
+
+            <!-- Main Cards -->
+            <div class="cards-grid">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Risk Distribution</h3>
+                        <span class="card-badge badge-live">Live Monitoring</span>
+                    </div>
+                    <div class="risk-bars">
+                        <div class="risk-item">
+                            <span class="risk-label" style="color: #dc2626;">CRITICAL</span>
+                            <div class="risk-bar-container">
+                                <div class="risk-bar critical" style="width: 5%;"></div>
+                            </div>
+                            <span class="risk-count" style="color: #dc2626;">2</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label" style="color: #f59e0b;">HIGH</span>
+                            <div class="risk-bar-container">
+                                <div class="risk-bar high" style="width: 15%;"></div>
+                            </div>
+                            <span class="risk-count" style="color: #f59e0b;">5</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label" style="color: #3b82f6;">MEDIUM</span>
+                            <div class="risk-bar-container">
+                                <div class="risk-bar medium" style="width: 30%;"></div>
+                            </div>
+                            <span class="risk-count" style="color: #3b82f6;">18</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label" style="color: #10b981;">LOW</span>
+                            <div class="risk-bar-container">
+                                <div class="risk-bar low" style="width: 50%;"></div>
+                            </div>
+                            <span class="risk-count" style="color: #10b981;">22</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Services Status</h3>
+                        <span class="card-badge badge-live">All Healthy</span>
+                    </div>
+                    <div class="services-list">
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-dot"></div>
+                                <span class="service-name">Ingestion Service</span>
+                            </div>
+                            <span class="service-status">ONLINE</span>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-dot"></div>
+                                <span class="service-name">Feature Store</span>
+                            </div>
+                            <span class="service-status">ONLINE</span>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-dot"></div>
+                                <span class="service-name">ML Serving</span>
+                            </div>
+                            <span class="service-status">ONLINE</span>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-dot"></div>
+                                <span class="service-name">Decision Engine</span>
+                            </div>
+                            <span class="service-status">ONLINE</span>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-dot"></div>
+                                <span class="service-name">Case Management</span>
+                            </div>
+                            <span class="service-status">ONLINE</span>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-dot"></div>
+                                <span class="service-name">Observability</span>
+                            </div>
+                            <span class="service-status">ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Section -->
+            <div class="architecture-section glass-card">
+                <div class="card-header">
+                    <h3 class="card-title">System Architecture</h3>
+                    <span class="card-badge" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa;">6 Microservices</span>
+                </div>
+                <div class="architecture-grid">
+                    <div class="arch-node ingestion">
+                        <div>🔌</div>
+                        <div>Ingestion</div>
+                    </div>
+                    <div class="arch-node features">
+                        <div>🧮</div>
+                        <div>Feature Store</div>
+                    </div>
+                    <div class="arch-node ml">
+                        <div>🤖</div>
+                        <div>ML Serving</div>
+                    </div>
+                    <div class="arch-node decision">
+                        <div>⚖️</div>
+                        <div>Decision</div>
+                    </div>
+                    <div class="arch-node cases">
+                        <div>💼</div>
+                        <div>Case Mgmt</div>
+                    </div>
+                    <div class="arch-node observability">
+                        <div>📊</div>
+                        <div>Observability</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Animate risk bars on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.risk-bar');
+            bars.forEach((bar, i) => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500 + (i * 100));
+            });
+        });
+
+        // Animate stat counters
+        function animateCounter(element, target, duration = 1500) {
+            const start = 0;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (target - start) * easeOut);
+                element.textContent = current.toLocaleString();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+    </script>
+</body>
+</html>
